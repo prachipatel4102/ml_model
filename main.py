@@ -1,3 +1,7 @@
+#code -api
+#fastapi- rest api ,uvicorn- server,basemodel- structure and validate,
+# @ - annotation - set of instriction,"/"- routes
+
 from pathlib import Path
 
 from fastapi import FastAPI
@@ -21,13 +25,13 @@ model = joblib.load(BASE_DIR / "linearmodel.pkl")
 
 
 class datascience(BaseModel):
-    AdvertisingBudget: float
+    StudyHours: float
 
 
 @app.get("/")
 def home():
-    # Opening the Render URL now shows the website
-    return FileResponse(BASE_DIR / "index.html")
+    # Opening the site URL shows the website (index.html)
+    return FileResponse(BASE_DIR / "index.html", headers={"Cache-Control": "no-cache"})
 
 
 @app.get("/health")
@@ -37,5 +41,5 @@ def test():
 
 @app.post("/predict")
 def datainsert(ds: datascience):
-    sales = model.predict([[ds.AdvertisingBudget]])
-    return {"predictedsales": round(float(sales[0][0]), 2)}
+    marks = model.predict([[ds.StudyHours]])
+    return {"predictedmarks": round(float(marks[0]), 2)}

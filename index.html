@@ -2,533 +2,749 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Sales predictor</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap"
-    rel="stylesheet">
-  <style>
-    :root {
-      --paper: #eef1ec;
-      --grid: #dbe2d9;
-      --panel: #fbfcf9;
-      --ink: #12332f;
-      --ink-soft: #4d6862;
-      --line: #c9d3c8;
-      --accent: #e8892b;
-      --accent-dark: #b9620f;
-      --error: #a63a2b;
-      --display: "Bricolage Grotesque", "Trebuchet MS", sans-serif;
-      --body: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Student marks predictor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Nunito:wght@400;600;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --wood: #7a5230;
+            --wood-dark: #4f3319;
+            --board: #1f3d36;
+            --board-light: #2a4d44;
+            --chalk: #f4f1e8;
+            --chalk-soft: rgba(244, 241, 232, 0.72);
+            --yellow: #f7d95c;
+            --pink: #ff93a8;
+            --blue: #86cdfc;
+            --display: "Caveat Brush", "Comic Sans MS", "Segoe Print", cursive;
+            --body: "Nunito", "Segoe UI", system-ui, sans-serif;
+            --rough: 255px 14px 225px 14px / 14px 225px 14px 255px;
+        }
 
-    * {
-      box-sizing: border-box;
-    }
+        * {
+            box-sizing: border-box;
+        }
 
-    html {
-      -webkit-text-size-adjust: 100%;
-    }
+        html {
+            -webkit-text-size-adjust: 100%;
+        }
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: var(--body);
-      color: var(--ink);
-      background-color: var(--paper);
-      background-image:
-        linear-gradient(var(--grid) 1px, transparent 1px),
-        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-      background-size: 32px 32px;
-      line-height: 1.5;
-    }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--wood);
+            background-image: repeating-linear-gradient(90deg, rgba(0, 0, 0, .06) 0 2px, transparent 2px 9px);
+            font-family: var(--body);
+            color: var(--chalk);
+            line-height: 1.5;
+            padding: 16px;
+        }
 
-    main {
-      max-width: 1060px;
-      margin: 0 auto;
-      padding: 48px 24px 40px;
-    }
+        [hidden] {
+            display: none !important;
+        }
 
-    h1 {
-      font-family: var(--display);
-      font-weight: 700;
-      font-size: clamp(2rem, 5vw, 3.2rem);
-      line-height: 1.05;
-      letter-spacing: -0.02em;
-      margin: 0 0 12px;
-      max-width: 16ch;
-    }
+        .board {
+            max-width: 980px;
+            min-height: calc(100vh - 32px);
+            margin: 0 auto;
+            padding: 44px 40px 36px;
+            background-color: var(--board);
+            background-image:
+                radial-gradient(ellipse at 15% 8%, rgba(255, 255, 255, .08), transparent 45%),
+                radial-gradient(ellipse at 85% 95%, rgba(255, 255, 255, .06), transparent 45%);
+            border: 10px solid var(--wood-dark);
+            box-shadow: inset 0 0 40px rgba(0, 0, 0, .45), 0 10px 30px rgba(0, 0, 0, .35);
+        }
 
-    .lede {
-      margin: 0 0 36px;
-      color: var(--ink-soft);
-      max-width: 52ch;
-      font-size: 1.05rem;
-    }
+        .eyebrow {
+            margin: 0 0 4px;
+            font-weight: 800;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            font-size: .8rem;
+            color: var(--blue);
+        }
 
-    .layout {
-      display: grid;
-      grid-template-columns: minmax(280px, 380px) 1fr;
-      gap: 24px;
-      align-items: start;
-    }
+        h1 {
+            font-family: var(--display);
+            font-weight: 400;
+            font-size: clamp(2.2rem, 6vw, 3.8rem);
+            line-height: 1.05;
+            margin: 0 0 10px;
+            color: var(--chalk);
+            text-shadow: 0 0 1px rgba(255, 255, 255, .5);
+        }
 
-    .panel {
-      background: var(--panel);
-      border: 1.5px solid var(--ink);
-      border-radius: 6px;
-      padding: 24px;
-    }
+        .lede {
+            margin: 0 0 32px;
+            color: var(--chalk-soft);
+            max-width: 54ch;
+            font-size: 1.05rem;
+        }
 
-    label,
-    .field-label {
-      display: block;
-      font-weight: 600;
-      font-size: 0.95rem;
-      margin-bottom: 8px;
-    }
+        .grid {
+            display: grid;
+            grid-template-columns: minmax(280px, 360px) 1fr;
+            gap: 24px;
+            align-items: stretch;
+        }
 
-    .hint {
-      color: var(--ink-soft);
-      font-size: 0.85rem;
-      margin: 6px 0 0;
-    }
+        .card {
+            border: 3px solid var(--chalk);
+            border-radius: var(--rough);
+            padding: 26px 26px 24px;
+            background: rgba(255, 255, 255, .03);
+        }
 
-    .num-wrap {
-      position: relative;
-    }
+        .card label.big {
+            display: block;
+            font-family: var(--display);
+            font-size: 1.6rem;
+            margin-bottom: 10px;
+            color: var(--yellow);
+        }
 
-    input[type="number"],
-    input[type="url"] {
-      width: 100%;
-      font: inherit;
-      font-size: 1.5rem;
-      font-family: var(--display);
-      font-weight: 500;
-      color: var(--ink);
-      background: #fff;
-      border: 1.5px solid var(--line);
-      border-radius: 4px;
-      padding: 10px 12px;
-    }
+        .stepper {
+            display: flex;
+            gap: 10px;
+            align-items: stretch;
+        }
 
-    input[type="url"] {
-      font-family: var(--body);
-      font-size: 0.95rem;
-      font-weight: 400;
-      padding: 8px 10px;
-    }
+        .stepper button {
+            flex: 0 0 52px;
+            font: inherit;
+            font-family: var(--display);
+            font-size: 2rem;
+            line-height: 1;
+            color: var(--chalk);
+            background: transparent;
+            border: 3px solid var(--chalk);
+            border-radius: 12px;
+            cursor: pointer;
+        }
 
-    input:focus-visible,
-    button:focus-visible,
-    summary:focus-visible {
-      outline: 3px solid var(--accent);
-      outline-offset: 2px;
-    }
+        .stepper button:hover {
+            background: rgba(255, 255, 255, .1);
+        }
 
-    input[type="number"]:focus {
-      border-color: var(--ink);
-    }
+        input[type="number"],
+        input[type="url"] {
+            width: 100%;
+            min-width: 0;
+            font-family: var(--display);
+            font-size: 2.6rem;
+            text-align: center;
+            color: var(--chalk);
+            background: rgba(0, 0, 0, .2);
+            border: 3px dashed var(--chalk-soft);
+            border-radius: 12px;
+            padding: 4px 8px;
+        }
 
-    input[type="range"] {
-      width: 100%;
-      margin: 22px 0 4px;
-      accent-color: var(--accent-dark);
-      height: 28px;
-      cursor: pointer;
-    }
+        input[type="url"] {
+            font-family: var(--body);
+            font-size: .95rem;
+            text-align: left;
+            padding: 8px 10px;
+            border-style: solid;
+            border-width: 2px;
+        }
 
-    .range-ends {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.8rem;
-      color: var(--ink-soft);
-    }
+        input:focus-visible,
+        button:focus-visible,
+        summary:focus-visible {
+            outline: 3px solid var(--yellow);
+            outline-offset: 3px;
+        }
 
-    button.primary {
-      margin-top: 22px;
-      width: 100%;
-      font: inherit;
-      font-weight: 600;
-      font-size: 1rem;
-      padding: 13px 16px;
-      border: 1.5px solid var(--ink);
-      background: var(--ink);
-      color: #fff;
-      border-radius: 4px;
-      cursor: pointer;
-    }
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 32px;
+            margin: 26px 0 4px;
+            background: transparent;
+            cursor: pointer;
+        }
 
-    button.primary:hover {
-      background: #0a211e;
-    }
+        input[type="range"]::-webkit-slider-runnable-track {
+            height: 6px;
+            background: var(--chalk-soft);
+            border-radius: 3px;
+        }
 
-    button.primary:disabled {
-      opacity: 0.6;
-      cursor: progress;
-    }
+        input[type="range"]::-moz-range-track {
+            height: 6px;
+            background: var(--chalk-soft);
+            border-radius: 3px;
+        }
 
-    details {
-      margin-top: 22px;
-      border-top: 1px solid var(--line);
-      padding-top: 14px;
-    }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 28px;
+            height: 28px;
+            margin-top: -11px;
+            border-radius: 50%;
+            background: var(--yellow);
+            border: 3px solid var(--chalk);
+        }
 
-    summary {
-      cursor: pointer;
-      font-size: 0.9rem;
-      color: var(--ink-soft);
-      font-weight: 500;
-    }
+        input[type="range"]::-moz-range-thumb {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--yellow);
+            border: 3px solid var(--chalk);
+        }
 
-    details .field {
-      margin-top: 12px;
-    }
+        .range-ends {
+            display: flex;
+            justify-content: space-between;
+            font-size: .85rem;
+            color: var(--chalk-soft);
+        }
 
-    .result-head {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
+        .hint {
+            margin: 14px 0 0;
+            font-size: .92rem;
+            color: var(--chalk-soft);
+        }
 
-    .result-label {
-      font-weight: 600;
-      font-size: 0.95rem;
-      color: var(--ink-soft);
-      margin: 0;
-    }
+        button.go {
+            margin-top: 22px;
+            width: 100%;
+            font-family: var(--display);
+            font-size: 1.6rem;
+            padding: 10px 16px;
+            color: var(--board);
+            background: var(--yellow);
+            border: 3px solid var(--chalk);
+            border-radius: var(--rough);
+            cursor: pointer;
+        }
 
-    .result-value {
-      font-family: var(--display);
-      font-weight: 700;
-      font-size: clamp(2.8rem, 8vw, 4.6rem);
-      letter-spacing: -0.03em;
-      line-height: 1;
-      margin: 6px 0 4px;
-      font-variant-numeric: tabular-nums;
-    }
+        button.go:hover {
+            background: #ffe680;
+        }
 
-    .result-value.empty {
-      color: #9bb0aa;
-    }
+        button.go:disabled {
+            opacity: .7;
+            cursor: progress;
+        }
 
-    .ratio {
-      margin: 0;
-      color: var(--ink-soft);
-      font-size: 0.98rem;
-      min-height: 1.5em;
-    }
+        details {
+            margin-top: 20px;
+            border-top: 2px dashed var(--chalk-soft);
+            padding-top: 12px;
+        }
 
-    .notice {
-      margin: 14px 0 0;
-      padding: 10px 12px;
-      border-left: 4px solid var(--accent);
-      background: #fdf1e1;
-      font-size: 0.9rem;
-    }
+        summary {
+            cursor: pointer;
+            font-size: .9rem;
+            color: var(--chalk-soft);
+        }
 
-    .error {
-      margin: 14px 0 0;
-      padding: 10px 12px;
-      border-left: 4px solid var(--error);
-      background: #f9e7e3;
-      color: #6f2318;
-      font-size: 0.9rem;
-    }
+        details label {
+            display: block;
+            margin: 10px 0 6px;
+            font-size: .85rem;
+            color: var(--chalk-soft);
+        }
 
-    [hidden] {
-      display: none !important;
-    }
+        /* Result */
+        .result {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
 
-    .chart-wrap {
-      margin-top: 24px;
-      border-top: 1px solid var(--line);
-      padding-top: 16px;
-    }
+        .kicker {
+            margin: 0;
+            font-family: var(--display);
+            font-size: 1.7rem;
+            color: var(--yellow);
+        }
 
-    .chart-title {
-      font-size: 0.9rem;
-      font-weight: 600;
-      margin: 0 0 6px;
-    }
+        .big-row {
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 6px 14px;
+            margin: 2px 0 10px;
+        }
 
-    svg {
-      display: block;
-      width: 100%;
-      height: auto;
-      overflow: visible;
-    }
+        .num {
+            font-family: var(--display);
+            font-size: clamp(5rem, 16vw, 9.5rem);
+            line-height: 1;
+            color: var(--chalk);
+            text-shadow: 0 0 2px rgba(255, 255, 255, .6), 0 0 22px rgba(247, 217, 92, .25);
+            font-variant-numeric: tabular-nums;
+        }
 
-    svg text {
-      font-family: var(--body);
-      font-size: 11px;
-      fill: var(--ink-soft);
-    }
+        .num.empty {
+            opacity: .35;
+        }
 
-    .fit-line {
-      stroke: var(--ink);
-      stroke-width: 2.5;
-      fill: none;
-    }
+        .outof {
+            font-family: var(--display);
+            font-size: clamp(1.8rem, 5vw, 2.8rem);
+            color: var(--chalk-soft);
+        }
 
-    .axis {
-      stroke: var(--ink);
-      stroke-width: 1.2;
-    }
+        .bar {
+            height: 22px;
+            border: 3px solid var(--chalk);
+            border-radius: 14px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, .2);
+        }
 
-    .tick {
-      stroke: var(--line);
-      stroke-width: 1;
-    }
+        .bar>div {
+            height: 100%;
+            width: 0;
+            background: var(--yellow);
+            transition: width .6s cubic-bezier(.2, .8, .2, 1);
+        }
 
-    .guide {
-      stroke: var(--accent-dark);
-      stroke-width: 1.2;
-      stroke-dasharray: 4 4;
-    }
+        .line {
+            margin: 16px 0 0;
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
 
-    .dot {
-      fill: var(--accent);
-      stroke: var(--ink);
-      stroke-width: 2;
-    }
+        .compare {
+            margin: 4px 0 0;
+            color: var(--chalk-soft);
+        }
 
-    .dot-group {
-      transition: transform 0.35s cubic-bezier(.2, .8, .2, 1);
-    }
+        .status,
+        .notice,
+        .error {
+            margin: 14px 0 0;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: .95rem;
+        }
 
-    footer {
-      margin-top: 28px;
-      font-size: 0.85rem;
-      color: var(--ink-soft);
-    }
+        .status {
+            border: 2px dashed var(--blue);
+            color: var(--blue);
+        }
 
-    @media (max-width: 820px) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
+        .notice {
+            border: 2px solid var(--yellow);
+            color: var(--yellow);
+        }
 
-      main {
-        padding-top: 32px;
-      }
-    }
+        .error {
+            border: 2px solid var(--pink);
+            color: var(--pink);
+            font-weight: 600;
+        }
 
-    @media (prefers-reduced-motion: reduce) {
-      .dot-group {
-        transition: none;
-      }
-    }
-  </style>
+        /* Chart */
+        .chart {
+            margin-top: 24px;
+        }
+
+        .chart h2 {
+            font-family: var(--display);
+            font-weight: 400;
+            font-size: 1.6rem;
+            margin: 0 0 4px;
+            color: var(--yellow);
+        }
+
+        .legend {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            font-size: .88rem;
+            color: var(--chalk-soft);
+            margin: 0 0 8px;
+        }
+
+        .legend i {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 6px;
+            vertical-align: -1px;
+        }
+
+        svg {
+            display: block;
+            width: 100%;
+            height: auto;
+            overflow: visible;
+        }
+
+        svg text {
+            font-family: var(--body);
+            font-size: 11px;
+            fill: var(--chalk-soft);
+        }
+
+        .gridline {
+            stroke: rgba(244, 241, 232, .16);
+            stroke-width: 1;
+        }
+
+        .axis {
+            stroke: var(--chalk);
+            stroke-width: 2;
+        }
+
+        .student {
+            fill: rgba(244, 241, 232, .5);
+        }
+
+        .fit {
+            stroke: var(--blue);
+            stroke-width: 4;
+            fill: none;
+            stroke-linecap: round;
+        }
+
+        .guide {
+            stroke: var(--pink);
+            stroke-width: 1.5;
+            stroke-dasharray: 5 5;
+        }
+
+        .you {
+            fill: var(--yellow);
+            stroke: var(--chalk);
+            stroke-width: 3;
+        }
+
+        svg text.you-label {
+            font-family: var(--display);
+            font-size: 20px;
+            fill: var(--yellow);
+            paint-order: stroke;
+            stroke: var(--board);
+            stroke-width: 5px;
+        }
+
+        footer {
+            margin-top: 26px;
+            font-size: .85rem;
+            color: var(--chalk-soft);
+        }
+
+        @media (max-width: 860px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .board {
+                padding: 30px 20px 28px;
+                border-width: 8px;
+            }
+
+            body {
+                padding: 8px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .bar>div {
+                transition: none;
+            }
+        }
+    </style>
 </head>
 
 <body>
-  <main>
-    <h1>What will this ad budget sell?</h1>
-    <p class="lede">Enter an advertising budget and the linear regression model returns the sales it expects. The line
-      below is the model&rsquo;s own fit.</p>
+    <main class="board">
+        <header>
+            <p class="eyebrow">Student marks predictor</p>
+            <h1>How many hours will you study?</h1>
+            <p class="lede">Pick the study hours and the linear regression model tells you the marks it expects out of
+                100.</p>
+        </header>
 
-    <div class="layout">
-      <section class="panel" aria-label="Inputs">
-        <label for="budget">Advertising budget</label>
-        <div class="num-wrap">
-          <input type="number" id="budget" min="0" step="any" value="10000" inputmode="decimal">
+        <div class="grid">
+            <section class="card controls" aria-label="Inputs">
+                <label class="big" for="hours">Study hours</label>
+                <div class="stepper">
+                    <button type="button" id="minus" aria-label="Decrease by half an hour">&minus;</button>
+                    <input type="number" id="hours" min="0" max="24" step="0.1" value="5" inputmode="decimal">
+                    <button type="button" id="plus" aria-label="Increase by half an hour">+</button>
+                </div>
+                <input type="range" id="slider" min="0" max="12" step="0.1" value="5" aria-label="Study hours slider">
+                <div class="range-ends"><span>0</span><span>12</span></div>
+                <p class="hint">The model learned from students who studied between 1 and 9.9 hours.</p>
+
+                <button class="go" id="go" type="button">Predict my marks</button>
+
+                <details>
+                    <summary>API address</summary>
+                    <label for="api">Where your FastAPI server is running</label>
+                    <input type="url" id="api" value="http://localhost:10000" spellcheck="false">
+                </details>
+            </section>
+
+            <section class="card result" aria-label="Prediction" aria-live="polite">
+                <p class="kicker">Predicted marks</p>
+                <div class="big-row">
+                    <span class="num empty" id="num">&ndash;</span>
+                    <span class="outof">/ 100</span>
+                </div>
+                <div class="bar" aria-hidden="true">
+                    <div id="fill"></div>
+                </div>
+                <p class="line" id="line">Working out your prediction&hellip;</p>
+                <p class="compare" id="compare"></p>
+                <p class="status" id="status" hidden></p>
+                <p class="notice" id="notice" hidden></p>
+                <p class="error" id="error" role="alert" hidden></p>
+            </section>
         </div>
-        <input type="range" id="slider" min="500" max="20000" step="50" value="10000"
-          aria-label="Advertising budget slider">
-        <div class="range-ends"><span>500</span><span>20,000</span></div>
-        <p class="hint">The model was trained on budgets from about 520 to 19,900.</p>
 
-        <button class="primary" id="go" type="button">Predict sales</button>
+        <section class="card chart" id="chartWrap" hidden>
+            <h2>Where you land among real students</h2>
+            <p class="legend">
+                <span><i style="background:rgba(244,241,232,.55)"></i>Students in the data</span>
+                <span><i style="background:var(--blue)"></i>Model&rsquo;s line</span>
+                <span><i style="background:var(--yellow)"></i>Your prediction</span>
+            </p>
+            <svg id="chart" viewBox="0 0 640 340" role="img"
+                aria-label="Scatter of student marks against study hours with the model line and your prediction marked"></svg>
+        </section>
 
-        <details>
-          <summary>API address</summary>
-          <div class="field">
-            <label for="api" style="font-weight:500">Where your FastAPI server is running</label>
-            <input type="url" id="api" value="https://sales-cc4u.onrender.com" spellcheck="false">
-          </div>
-        </details>
-      </section>
+        <footer>Uses the <code>POST /predict</code> endpoint of your FastAPI app. If the server is off, the page uses the same equation (marks = 19.05 + 9.0 &times; hours) by itself.</footer>
+    </main>
 
-      <section class="panel" aria-label="Prediction" aria-live="polite">
-        <div class="result-head">
-          <p class="result-label">Predicted sales</p>
-        </div>
-        <p class="result-value empty" id="result">&ndash;</p>
-        <p class="ratio" id="ratio">Press Predict sales to see the result.</p>
-        <p class="notice" id="notice" hidden></p>
-        <p class="error" id="error" role="alert" hidden></p>
+    <script>
+        (function () {
+            var DATA = [[1.0, 27.0], [1.2, 31.0], [1.2, 28.0], [1.3, 33.0], [1.4, 25.0], [1.4, 31.0], [1.5, 36.0], [1.6, 32.0], [1.6, 34.0], [1.7, 33.0], [1.7, 33.0], [1.8, 29.0], [1.9, 44.0], [2.0, 32.0], [2.0, 38.0], [2.1, 36.0], [2.1, 39.0], [2.3, 39.0], [2.3, 32.0], [2.4, 40.0], [2.4, 38.0], [2.5, 41.0], [2.6, 41.0], [2.7, 46.0], [2.7, 51.0], [2.8, 45.0], [2.8, 38.0], [2.8, 42.0], [2.9, 46.0], [3.3, 51.0], [3.4, 48.0], [3.5, 51.0], [3.6, 45.0], [3.6, 51.0], [3.7, 49.0], [3.7, 52.0], [3.8, 49.0], [3.8, 59.0], [3.9, 60.0], [3.9, 57.0], [4.0, 50.0], [4.2, 58.0], [4.2, 52.0], [4.3, 57.0], [4.4, 59.0], [4.5, 57.0], [4.8, 64.0], [4.9, 62.0], [5.0, 66.0], [5.1, 60.0], [5.2, 69.0], [5.4, 66.0], [5.5, 65.0], [5.6, 68.0], [5.7, 71.0], [5.7, 66.0], [5.7, 72.0], [5.9, 79.0], [5.9, 76.0], [6.1, 73.0], [6.3, 77.0], [6.4, 76.0], [6.4, 73.0], [6.4, 71.0], [6.5, 81.0], [6.5, 88.0], [6.6, 83.0], [6.7, 79.0], [7.0, 81.0], [7.2, 86.0], [7.4, 87.0], [7.4, 97.0], [7.4, 90.0], [7.6, 92.0], [7.6, 96.0], [7.6, 91.0], [7.8, 92.0], [7.9, 91.0], [7.9, 90.0], [8.0, 93.0], [8.0, 90.0], [8.1, 94.0], [8.2, 98.0], [8.3, 99.0], [8.3, 98.0], [8.5, 100.0], [8.5, 98.0], [8.8, 100.0], [8.8, 100.0], [9.0, 100.0], [9.1, 100.0], [9.2, 100.0], [9.3, 100.0], [9.5, 100.0], [9.5, 100.0], [9.6, 100.0], [9.7, 100.0], [9.7, 100.0], [9.7, 100.0], [9.9, 100.0]]; /* [studyHours, marks] for each student in the dataset */
+            var MIN_TRAIN = 1, MAX_TRAIN = 9.9, X_MAX = 12;
+            /* Same equation as linearmodel.pkl: marks = INTERCEPT + COEF * hours */
+            var COEF = 8.995617718638968, INTERCEPT = 19.053412338171313;
+            var usedLocal = false;
+            var AVG = DATA.reduce(function (s, p) { return s + p[1]; }, 0) / DATA.length;
 
-        <div class="chart-wrap" id="chartWrap" hidden>
-          <p class="chart-title">Sales against advertising budget</p>
-          <svg id="chart" viewBox="0 0 600 320" role="img"
-            aria-label="Fitted line of predicted sales against advertising budget, with the current prediction marked"></svg>
-        </div>
-      </section>
-    </div>
+            var $ = function (id) { return document.getElementById(id); };
+            var hours = $('hours'), slider = $('slider'), go = $('go'), api = $('api');
+            var num = $('num'), fill = $('fill'), lineEl = $('line'), compare = $('compare');
+            var statusEl = $('status'), notice = $('notice'), errorBox = $('error');
+            var chartWrap = $('chartWrap'), chart = $('chart');
+            var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    <footer>Uses the <code>POST /predict</code> endpoint of your FastAPI app.</footer>
-  </main>
+            /* When this page is served by the FastAPI app itself, call the same server.
+               When it is opened as a file on your computer, use localhost (or your saved address). */
+            var served = location.protocol.indexOf('http') === 0;
+            if (served) {
+                api.value = location.origin;
+            } else {
+                try {
+                    var saved = localStorage.getItem('marks-api');
+                    if (saved) api.value = saved;
+                } catch (e) { }
+            }
 
-  <script>
-    (function () {
-      var MIN_TRAIN = 520, MAX_TRAIN = 19909, X_MAX = 20000;
-      var $ = function (id) { return document.getElementById(id); };
-      var budget = $('budget'), slider = $('slider'), go = $('go'), api = $('api');
-      var result = $('result'), ratio = $('ratio'), notice = $('notice'), errorBox = $('error');
-      var chartWrap = $('chartWrap'), chart = $('chart');
+            var fmt = function (n, d) {
+                return Number(n).toLocaleString(undefined, { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 });
+            };
+            function baseUrl() { return api.value.trim().replace(/\/+$/, ''); }
 
-      try {
-        var saved = localStorage.getItem('sales-api-v2');
-        if (saved) api.value = saved;
-      } catch (e) { }
+            function localPredict(h) { return Math.round((INTERCEPT + COEF * h) * 100) / 100; }
 
-      var fmt = function (n, d) {
-        return Number(n).toLocaleString(undefined, { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 });
-      };
+            function predict(h) {
+                return fetch(baseUrl() + '/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ StudyHours: h })
+                }).then(function (res) {
+                    if (!res.ok) { var err = new Error('http'); err.status = res.status; throw err; }
+                    return res.json();
+                }).then(function (data) { return data.predictedmarks; })
+                .catch(function (err) {
+                    if (err && err.status) throw err;  /* server answered with an error: show it */
+                    usedLocal = true;                  /* server not reachable: use the saved equation */
+                    return localPredict(h);
+                });
+            }
 
-      function baseUrl() { return api.value.trim().replace(/\/+$/, ''); }
+            function showError(msg) { errorBox.textContent = msg; errorBox.hidden = false; }
 
-      function predict(x) {
-        return fetch(baseUrl() + '/predict', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ AdvertisingBudget: x })
-        }).then(function (res) {
-          if (!res.ok) {
-            var err = new Error('http');
-            err.status = res.status;
-            throw err;
-          }
-          return res.json();
-        }).then(function (data) { return data.predictedsales; });
-      }
+            var shown = 0, raf = null;
+            function animateTo(target) {
+                cancelAnimationFrame(raf);
+                if (reduceMotion) { num.textContent = fmt(target, 1); shown = target; return; }
+                var from = shown, start = null, dur = 600;
+                function step(t) {
+                    if (start === null) start = t;
+                    var p = Math.min((t - start) / dur, 1);
+                    var v = from + (target - from) * (1 - Math.pow(1 - p, 3));
+                    num.textContent = fmt(v, 1);
+                    shown = v;
+                    if (p < 1) raf = requestAnimationFrame(step);
+                    else { shown = target; num.textContent = fmt(target, 1); }
+                }
+                raf = requestAnimationFrame(step);
+            }
 
-      function showError(msg) {
-        errorBox.textContent = msg;
-        errorBox.hidden = false;
-      }
+            /* The model's line is drawn from two predictions made by the model itself */
+            var line = null, lineBase = null;
+            function getLine() {
+                if (line && lineBase === baseUrl()) return Promise.resolve(line);
+                return Promise.all([predict(0), predict(X_MAX)]).then(function (ys) {
+                    line = { y0: ys[0], y1: ys[1] };
+                    lineBase = baseUrl();
+                    return line;
+                });
+            }
 
-      /* Fitted line, drawn from two predictions made by the model itself */
-      var line = null, lineBase = null;
+            function drawChart(h, marks, ln) {
+                var W = 640, H = 340, L = 48, R = 16, T = 16, B = 44;
+                var pw = W - L - R, ph = H - T - B;
+                var sx = function (v) { return L + (v / X_MAX) * pw; };
+                var sy = function (v) { return T + ph - (v / 100) * ph; };
+                var out = '<defs><clipPath id="plot"><rect x="' + L + '" y="' + T + '" width="' + pw + '" height="' + ph + '"/></clipPath></defs>';
+                var i, v;
 
-      function getLine() {
-        if (line && lineBase === baseUrl()) return Promise.resolve(line);
-        return Promise.all([predict(0), predict(X_MAX)]).then(function (ys) {
-          line = { y0: ys[0], y1: ys[1] };
-          lineBase = baseUrl();
-          return line;
-        });
-      }
+                for (i = 0; i <= 4; i++) {
+                    v = i * 25;
+                    out += '<line class="gridline" x1="' + L + '" x2="' + (W - R) + '" y1="' + sy(v) + '" y2="' + sy(v) + '"/>';
+                    out += '<text x="' + (L - 8) + '" y="' + (sy(v) + 4) + '" text-anchor="end">' + v + '</text>';
+                }
+                for (i = 0; i <= 6; i++) {
+                    v = i * 2;
+                    out += '<text x="' + sx(v) + '" y="' + (H - 22) + '" text-anchor="middle">' + v + '</text>';
+                }
+                out += '<text x="' + (L + pw / 2) + '" y="' + (H - 4) + '" text-anchor="middle">Study hours</text>';
+                out += '<text x="12" y="' + (T + ph / 2) + '" text-anchor="middle" transform="rotate(-90 12 ' + (T + ph / 2) + ')">Marks</text>';
+                out += '<line class="axis" x1="' + L + '" x2="' + L + '" y1="' + T + '" y2="' + (T + ph) + '"/>';
+                out += '<line class="axis" x1="' + L + '" x2="' + (W - R) + '" y1="' + (T + ph) + '" y2="' + (T + ph) + '"/>';
 
-      function niceMax(v) {
-        var step = Math.pow(10, Math.floor(Math.log10(v)));
-        return Math.ceil(v / step) * step;
-      }
+                out += '<g clip-path="url(#plot)">';
+                DATA.forEach(function (p) {
+                    out += '<circle class="student" cx="' + sx(p[0]) + '" cy="' + sy(p[1]) + '" r="3.5"/>';
+                });
+                out += '<line class="fit" x1="' + sx(0) + '" y1="' + sy(ln.y0) + '" x2="' + sx(X_MAX) + '" y2="' + sy(ln.y1) + '"/>';
+                out += '</g>';
 
-      function drawChart(x, y, ln) {
-        var W = 600, H = 320, L = 60, R = 16, T = 16, B = 40;
-        var pw = W - L - R, ph = H - T - B;
-        var yTop = niceMax(Math.max(ln.y0, ln.y1, y) * 1.05);
-        var yMin = Math.min(0, ln.y0, ln.y1, y);
-        var sx = function (v) { return L + (v / X_MAX) * pw; };
-        var sy = function (v) { return T + ph - ((v - yMin) / (yTop - yMin)) * ph; };
-        var out = '';
-        var i, v;
+                var cx = sx(Math.min(h, X_MAX)), cy = sy(marks);
+                out += '<line class="guide" x1="' + cx + '" x2="' + cx + '" y1="' + cy + '" y2="' + (T + ph) + '"/>';
+                out += '<line class="guide" x1="' + L + '" x2="' + cx + '" y1="' + cy + '" y2="' + cy + '"/>';
+                out += '<circle class="you" cx="' + cx + '" cy="' + cy + '" r="9"/>';
+                var anchor = cx > W - 100 ? 'end' : 'start';
+                var lx = anchor === 'end' ? cx - 16 : cx + 16;
+                var ly = cy < T + 30 ? cy + 26 : cy - 14;
+                out += '<text class="you-label" x="' + lx + '" y="' + ly + '" text-anchor="' + anchor + '">' + fmt(marks, 1) + '</text>';
+                chart.innerHTML = out;
+                chartWrap.hidden = false;
+            }
 
-        for (i = 0; i <= 4; i++) {
-          v = yMin + (yTop - yMin) * i / 4;
-          out += '<line class="tick" x1="' + L + '" x2="' + (W - R) + '" y1="' + sy(v) + '" y2="' + sy(v) + '"/>';
-          out += '<text x="' + (L - 8) + '" y="' + (sy(v) + 4) + '" text-anchor="end">' + fmt(v) + '</text>';
-        }
-        for (i = 0; i <= 4; i++) {
-          v = X_MAX * i / 4;
-          out += '<text x="' + sx(v) + '" y="' + (H - 18) + '" text-anchor="middle">' + fmt(v) + '</text>';
-        }
-        out += '<text x="' + (L + pw / 2) + '" y="' + (H - 2) + '" text-anchor="middle">Advertising budget</text>';
-        out += '<line class="axis" x1="' + L + '" x2="' + L + '" y1="' + T + '" y2="' + (T + ph) + '"/>';
-        out += '<line class="axis" x1="' + L + '" x2="' + (W - R) + '" y1="' + (T + ph) + '" y2="' + (T + ph) + '"/>';
-        out += '<line class="fit-line" x1="' + sx(0) + '" y1="' + sy(ln.y0) + '" x2="' + sx(X_MAX) + '" y2="' + sy(ln.y1) + '"/>';
+            function hoursText(h) {
+                var t = fmt(h, h % 1 ? 1 : 0);
+                return t + (h === 1 ? ' hour' : ' hours');
+            }
 
-        var cx = sx(Math.min(x, X_MAX)), cy = sy(y);
-        out += '<line class="guide" x1="' + cx + '" x2="' + cx + '" y1="' + cy + '" y2="' + (T + ph) + '"/>';
-        out += '<line class="guide" x1="' + L + '" x2="' + cx + '" y1="' + cy + '" y2="' + cy + '"/>';
-        out += '<g class="dot-group"><circle class="dot" cx="' + cx + '" cy="' + cy + '" r="7"/></g>';
-        chart.innerHTML = out;
-        chartWrap.hidden = false;
-      }
+            var busy = false, wakeTimer = null;
 
-      var busy = false;
+            function run() {
+                var h = parseFloat(hours.value);
+                errorBox.hidden = true;
+                notice.hidden = true;
+                statusEl.hidden = true;
 
-      function run() {
-        var x = parseFloat(budget.value);
-        errorBox.hidden = true;
-        notice.hidden = true;
+                if (isNaN(h) || h < 0) {
+                    showError('Enter study hours of 0 or more.');
+                    return;
+                }
+                if (busy) return;
+                busy = true;
+                usedLocal = false;
+                go.disabled = true;
+                go.textContent = 'Predicting\u2026';
+                wakeTimer = setTimeout(function () {
+                    statusEl.textContent = 'Waking up the server. A free host can take up to a minute the first time.';
+                    statusEl.hidden = false;
+                }, 4000);
 
-        if (isNaN(x) || x < 0) {
-          showError('Enter an advertising budget of 0 or more.');
-          return;
-        }
-        if (busy) return;
-        busy = true;
-        go.disabled = true;
-        go.textContent = 'Predicting\u2026';
+                predict(h).then(function (raw) {
+                    var marks = Math.max(0, Math.min(100, raw));
+                    num.classList.remove('empty');
+                    animateTo(marks);
+                    fill.style.width = marks + '%';
+                    lineEl.textContent = 'If you study ' + hoursText(h) + '.';
+                    var diff = marks - AVG;
+                    compare.textContent = (Math.abs(diff) < 0.05
+                        ? 'That is right at the average of '
+                        : 'That is ' + fmt(Math.abs(diff), 1) + ' marks ' + (diff > 0 ? 'above' : 'below') + ' the average of ') +
+                        fmt(AVG, 1) + ' in the data.';
 
-        predict(x).then(function (y) {
-          result.textContent = fmt(y, 2);
-          result.classList.remove('empty');
-          ratio.textContent = x > 0
-            ? 'About ' + fmt(y / x, 2) + ' in sales for every 1 spent on advertising.'
-            : '';
-          if (x < MIN_TRAIN || x > MAX_TRAIN) {
-            notice.textContent = 'This budget is outside the range the model was trained on (about 520 to 19,900), so treat the result as a rough extrapolation.';
-            notice.hidden = false;
-          }
-          try { localStorage.setItem('sales-api-v2', api.value.trim()); } catch (e) { }
-          return getLine().then(function (ln) { drawChart(x, y, ln); }).catch(function () { });
-        }).catch(function (err) {
-          result.textContent = '\u2013';
-          result.classList.add('empty');
-          ratio.textContent = '';
-          chartWrap.hidden = true;
-          if (err && err.status === 422) {
-            showError('The API rejected this value. Enter a plain number.');
-          } else if (err && err.status) {
-            showError('The API answered with an error (status ' + err.status + '). Check the server logs.');
-          } else {
-            showError('Could not reach the API at ' + baseUrl() + '. Make sure the server is running and that CORS is enabled in main.py.');
-          }
-        }).then(function () {
-          busy = false;
-          go.disabled = false;
-          go.textContent = 'Predict sales';
-        });
-      }
+                    var msgs = [];
+                    if (usedLocal) msgs.push('The server is not reachable, so this answer comes from the model equation saved inside this page.');
+                    if (raw > 100) msgs.push('The model\u2019s line gives ' + fmt(raw, 1) + ', but marks cannot go above 100, so it is shown as 100.');
+                    if (raw < 0) msgs.push('The model\u2019s line gives ' + fmt(raw, 1) + ', but marks cannot go below 0, so it is shown as 0.');
+                    if (h < MIN_TRAIN || h > MAX_TRAIN) msgs.push('The model only learned from 1 to 9.9 study hours, so treat this as a rough guess.');
+                    if (msgs.length) { notice.textContent = msgs.join(' '); notice.hidden = false; }
 
-      var timer = null;
-      function debounced() {
-        clearTimeout(timer);
-        timer = setTimeout(run, 300);
-      }
+                    try { if (!served) localStorage.setItem('marks-api', api.value.trim()); } catch (e) { }
+                    return getLine().then(function (ln) { drawChart(h, marks, ln); }).catch(function () { });
+                }).catch(function (err) {
+                    cancelAnimationFrame(raf);
+                    shown = 0;
+                    num.textContent = '\u2013';
+                    num.classList.add('empty');
+                    fill.style.width = '0';
+                    lineEl.textContent = 'No prediction yet.';
+                    compare.textContent = '';
+                    chartWrap.hidden = true;
+                    if (err && err.status === 422) {
+                        showError('The API rejected this value. Enter a plain number.');
+                    } else if (err && err.status) {
+                        showError('The API answered with an error (status ' + err.status + '). Check the server logs.');
+                    } else {
+                        showError('Could not reach the API at ' + baseUrl() + '. Check that the server is running and that CORS is enabled in main.py.');
+                    }
+                }).then(function () {
+                    clearTimeout(wakeTimer);
+                    statusEl.hidden = true;
+                    busy = false;
+                    go.disabled = false;
+                    go.textContent = 'Predict my marks';
+                });
+            }
 
-      slider.addEventListener('input', function () {
-        budget.value = slider.value;
-        debounced();
-      });
-      budget.addEventListener('input', function () {
-        var v = parseFloat(budget.value);
-        if (!isNaN(v)) slider.value = Math.min(Math.max(v, +slider.min), +slider.max);
-      });
-      budget.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter') { clearTimeout(timer); run(); }
-      });
-      go.addEventListener('click', function () { clearTimeout(timer); run(); });
-    })();
-  </script>
+            var timer = null;
+            function debounced() { clearTimeout(timer); timer = setTimeout(run, 300); }
+
+            slider.addEventListener('input', function () { hours.value = slider.value; debounced(); });
+            hours.addEventListener('input', function () {
+                var v = parseFloat(hours.value);
+                if (!isNaN(v)) slider.value = Math.min(Math.max(v, +slider.min), +slider.max);
+            });
+            hours.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') { clearTimeout(timer); run(); }
+            });
+            function nudge(d) {
+                var v = parseFloat(hours.value);
+                if (isNaN(v)) v = 0;
+                v = Math.min(24, Math.max(0, Math.round((v + d) * 10) / 10));
+                hours.value = v;
+                slider.value = Math.min(v, +slider.max);
+                debounced();
+            }
+            $('minus').addEventListener('click', function () { nudge(-0.5); });
+            $('plus').addEventListener('click', function () { nudge(0.5); });
+            go.addEventListener('click', function () { clearTimeout(timer); run(); });
+
+            run(); /* show a prediction as soon as the page opens */
+        })();
+    </script>
 </body>
 
 </html>
