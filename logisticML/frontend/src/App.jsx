@@ -4,7 +4,7 @@ import Footer from './components/Footer';
 import './App.css';
 
 // Configurable backend URL: uses environment variable if set, otherwise the Render backend URL
-const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_URL || 'https://student-predict-mnqv.onrender.com';
+const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_URL || 'https://logistic-ml-iw2q.onrender.com';
 
 export default function App() {
   const [studyHours, setStudyHours] = useState('');
