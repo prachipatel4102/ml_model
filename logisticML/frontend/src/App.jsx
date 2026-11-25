@@ -3,6 +3,9 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import './App.css';
 
+// Configurable backend URL: uses environment variable if set, otherwise the Render backend URL
+const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_URL || 'https://student-predict-mnqv.onrender.com';
+
 export default function App() {
   const [studyHours, setStudyHours] = useState('');
   const [resultMessage, setResultMessage] = useState(null);
@@ -30,8 +33,8 @@ export default function App() {
     setResultMessage(null);
 
     try {
-      // Attempt to call the FastAPI backend endpoint first
-      const response = await fetch('http://127.0.0.1:8000/predict', {
+      // Call the Render backend API endpoint
+      const response = await fetch(`${BACKEND_BASE_URL}/predict`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -40,15 +43,20 @@ export default function App() {
       });
 
       if (response.ok) {
-        const data = await response.json();
-        const outcome = data.result; // "Pass" or "Fail"
-        setResultMessage(`Student Result: ${outcome}`);
-        setResultStatus(outcome.toLowerCase());
-      } else {
-        throw new Error('Backend response error');
+        const text = await response.text();
+        if (text) {
+          const data = JSON.parse(text);
+          if (data && data.result) {
+            const outcome = data.result; // "Pass" or "Fail"
+            setResultMessage(`Student Result: ${outcome}`);
+            setResultStatus(outcome.toLowerCase());
+            return;
+          }
+        }
       }
+      throw new Error('Fallback to model formula');
     } catch {
-      // Seamless offline fallback using the trained logistic regression model weights:
+      // Seamless calculation using the trained logistic regression model:
       // logit = 1.12160441 * StudyHours - 6.10225618
       // Threshold ~5.44 hours: >= 5.44 => Pass, < 5.44 => Fail
       const logit = 1.12160441 * hours - 6.10225618;
